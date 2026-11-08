@@ -1,3 +1,4 @@
+import headerBanner from '../assets/header-banner.webp';
 import { loadLeaderboard } from '../services/leaderboard';
 import { countPossibleSecrets } from '../core/countPossibleSecrets';
 import { el } from './dom';
@@ -23,6 +24,15 @@ export const renderSettings = (
   let selectedBase = initial.base;
 
   const container = el('section', { class: 'settings-screen' });
+  const bannerRow = el('div', { class: 'header-banner-row' });
+  bannerRow.append(
+    el('img', {
+      src: headerBanner,
+      class: 'header-banner',
+      alt: 'Bulls and Cows Banner',
+    }),
+  );
+  container.append(bannerRow);
   container.append(el('h1', { text: 'Bulls and Cows' }));
 
   const lengthSection = el('div', { class: 'settings-section' });

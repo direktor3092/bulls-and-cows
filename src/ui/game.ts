@@ -1,3 +1,5 @@
+import iconBull from '../assets/icon-bull.webp';
+import iconCow from '../assets/icon-cow.webp';
 import { createDigitValidator } from '../core/createDigitValidator';
 import { evaluateGuess } from '../core/evaluateGuess';
 import { isValidGuess } from '../core/isValidGuess';
@@ -109,19 +111,21 @@ export const renderGame = (
       const bullBadge = el('button', {
         class: 'history-bulls',
         type: 'button',
-        text: `🐂 ${entry.bulls}`,
         disabled: index === 0,
-        title:
-          index === 0
-            ? 'First attempt: nothing to compare yet'
-            : 'Click to highlight matching digits in previous attempts',
         onclick: () => toggleBullHighlight(index),
       });
+      bullBadge.append(
+        el('img', { src: iconBull, class: 'bulls-icon', alt: 'Bull' }),
+        el('span', { text: ` ${entry.bulls}` }),
+      );
 
       const cowBadge = el('span', {
         class: 'history-cows',
-        text: `🐄 ${entry.cows}`,
       });
+      cowBadge.append(
+        el('img', { src: iconCow, class: 'cows-icon', alt: 'Cow' }),
+        el('span', { text: ` ${entry.cows}` }),
+      );
 
       row.append(
         el('span', { class: 'history-index', text: `${index + 1}.` }),

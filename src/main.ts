@@ -5,6 +5,7 @@ import { renderGame } from './ui/game';
 import { renderWinScreen } from './ui/win';
 import { generateSecret } from './core/generateSecret';
 import { saveRecord } from './services/leaderboard';
+import { initFireEffect } from './ui/fire-effect';
 
 const root = document.createElement('div');
 root.id = 'root';
@@ -55,3 +56,4 @@ const renderApp = (): void => {
 };
 
 renderApp();
+initFireEffect();
