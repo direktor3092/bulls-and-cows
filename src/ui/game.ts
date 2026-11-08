@@ -19,17 +19,29 @@ export const renderGame = (
   container.append(header);
 
   const historyList = el('div', { class: 'history-list' });
-  state.history.forEach((entry, index) => {
-    const row = el('div', { class: 'history-row' });
-    row.append(
-      el('span', { class: 'history-index', text: `${index + 1}.` }),
-      el('span', { class: 'history-guess', text: entry.guess }),
-      el('span', { class: 'history-bulls', text: `🐂 ${entry.bulls}` }),
-      el('span', { class: 'history-cows', text: `🐄 ${entry.cows}` }),
+
+  if (state.history.length === 0) {
+    historyList.append(
+      el('p', {
+        class: 'history-empty',
+        text: 'No attempts yet. Make your first guess!',
+      }),
     );
-    historyList.append(row);
-  });
+  } else {
+    state.history.forEach((entry, index) => {
+      const row = el('div', { class: 'history-row' });
+      row.append(
+        el('span', { class: 'history-index', text: `${index + 1}.` }),
+        el('span', { class: 'history-guess', text: entry.guess }),
+        el('span', { class: 'history-bulls', text: `🐂 ${entry.bulls}` }),
+        el('span', { class: 'history-cows', text: `🐄 ${entry.cows}` }),
+      );
+      historyList.append(row);
+    });
+  }
   container.append(historyList);
+
+  const message = el('p', { class: 'game-message' });
 
   const inputRow = el('div', { class: 'input-row' });
   const input = el('input', {
@@ -37,50 +49,74 @@ export const renderGame = (
     type: 'text',
     maxlength: state.settings.length,
     placeholder: `Enter ${state.settings.length} digits...`,
+    autocomplete: 'off',
   }) as HTMLInputElement;
 
   const isDigit = createDigitValidator(state.settings.base);
-
   input.addEventListener('input', () => {
-    const filtered = input.value.split('').filter(isDigit).join('');
-    if (input.value !== filtered) {
-      input.value = filtered;
-    }
+    const filtered = input.value
+      .split('')
+      .filter(isDigit)
+      .join('')
+      .toLowerCase();
+    if (input.value !== filtered) input.value = filtered;
   });
+
+  const showMessage = (text: string, isError = false): void => {
+    message.textContent = text;
+    message.classList.toggle('error', isError);
+    setTimeout(() => {
+      if (message.textContent === text) {
+        message.textContent = '';
+        message.classList.remove('error');
+      }
+    }, 1500);
+  };
+
+  const submitGuess = (): void => {
+    const guess = input.value.toLowerCase();
+
+    if (!isValidGuess(guess, state.settings.length, state.settings.base)) {
+      input.classList.add('shake-error');
+      setTimeout(() => input.classList.remove('shake-error'), 500);
+      showMessage(`Enter ${state.settings.length} unique valid digits`, true);
+      return;
+    }
+
+    const isDuplicate = state.history.some((e) => e.guess === guess);
+    if (isDuplicate) {
+      input.classList.add('shake-error');
+      setTimeout(() => input.classList.remove('shake-error'), 500);
+      showMessage('Already tried this guess', true);
+      input.value = '';
+      input.focus();
+      return;
+    }
+
+    const result = evaluateGuess(state.secret!, guess);
+    const newState = addGuessToHistory(state, guess, result);
+    input.value = '';
+
+    if (result.bulls === state.settings.length) {
+      onStateUpdate(endGame(newState), true);
+    } else {
+      onStateUpdate(newState, false);
+    }
+  };
 
   const submitBtn = el('button', {
     class: 'submit-btn',
     type: 'button',
     text: 'Check',
-    onclick: () => {
-      const guess = input.value.toLowerCase();
-
-      if (!isValidGuess(guess, state.settings.length, state.settings.base)) {
-        input.classList.add('shake-error');
-        setTimeout(() => input.classList.remove('shake-error'), 500);
-        return;
-      }
-
-      const result = evaluateGuess(state.secret!, guess);
-      const newState = addGuessToHistory(state, guess, result);
-
-      input.value = '';
-
-      if (result.bulls === state.settings.length) {
-        const wonState = endGame(newState);
-        onStateUpdate(wonState, true);
-      } else {
-        onStateUpdate(newState, false);
-      }
-    },
+    onclick: submitGuess,
   });
 
   input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') submitBtn.click();
+    if (e.key === 'Enter') submitGuess();
   });
 
   inputRow.append(input, submitBtn);
-  container.append(inputRow);
+  container.append(inputRow, message);
 
   const newGameBtn = el('button', {
     class: 'new-game-btn',
@@ -88,10 +124,14 @@ export const renderGame = (
     text: 'New game',
     onclick: onNewGame,
   });
-
   const footer = el('div', { class: 'game-footer' });
   footer.append(newGameBtn);
   container.append(footer);
+
+  requestAnimationFrame(() => {
+    historyList.scrollTop = historyList.scrollHeight;
+    input.focus();
+  });
 
   return container;
 };
