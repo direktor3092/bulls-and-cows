@@ -1,3 +1,4 @@
+import { loadLeaderboard } from '../services/leaderboard';
 import { countPossibleSecrets } from '../core/countPossibleSecrets';
 import { el } from './dom';
 
@@ -90,5 +91,31 @@ export const renderSettings = (
 
   updateUI();
   container.append(lengthSection, baseSection, info, startBtn);
+
+  const leaderboard = loadLeaderboard();
+  if (leaderboard.length > 0) {
+    const lbSection = el('div', { class: 'settings-section leaderboard' });
+    lbSection.append(el('h3', { text: 'Leaderboard' }));
+    const lbList = el('ol', { class: 'leaderboard-list' });
+
+    leaderboard.slice(0, 10).forEach((entry) => {
+      const seconds = Math.round(entry.timeMs / 1000);
+      const item = el('li', { class: 'leaderboard-item' });
+      item.append(
+        el('span', {
+          class: 'lb-stats',
+          text: `${entry.attempts} attempts, ${seconds}s`,
+        }),
+        el('span', {
+          class: 'lb-badge',
+          text: `L${entry.length} · B${entry.base}`,
+        }),
+      );
+      lbList.append(item);
+    });
+
+    lbSection.append(lbList);
+    container.append(lbSection);
+  }
   return container;
 };

@@ -1,41 +1,55 @@
 import './style.css';
-import { GameState, createInitialState, startGame } from './state/state';
+import { createInitialState, startGame, resetToSettings } from './state/state';
 import { renderSettings } from './ui/settings';
 import { renderGame } from './ui/game';
+import { renderWinScreen } from './ui/win';
+import { generateSecret } from './core/generateSecret';
+import { saveRecord } from './services/leaderboard';
 
 const root = document.createElement('div');
 root.id = 'root';
 document.body.append(root);
 
-let state: GameState = createInitialState();
+let state = createInitialState();
 
 const renderApp = (): void => {
   if (state.status === 'settings') {
     root.replaceChildren(
       renderSettings(state.settings, (settings) => {
-        import('./core/generateSecret').then(({ generateSecret }) => {
-          const secret = generateSecret(settings.length, settings.base);
-          state = startGame(state, settings, secret);
-          renderApp();
-        });
+        const secret = generateSecret(settings.length, settings.base);
+        state = startGame(state, settings, secret);
+        renderApp();
       }),
     );
-  } else {
+  } else if (state.status === 'playing') {
     root.replaceChildren(
       renderGame(
         state,
         (newState, isWin) => {
           state = newState;
           if (isWin) {
-            alert(`You won in ${state.history.length} attempts!`);
+            saveRecord({
+              attempts: state.history.length,
+              timeMs: (state.endTime ?? 0) - (state.startTime ?? 0),
+              length: state.settings.length,
+              base: state.settings.base,
+              timestamp: Date.now(),
+            });
           }
           renderApp();
         },
         () => {
-          state = { ...state, status: 'settings', history: [], secret: null };
+          state = resetToSettings(state);
           renderApp();
         },
       ),
+    );
+  } else {
+    root.replaceChildren(
+      renderWinScreen(state, () => {
+        state = resetToSettings(state);
+        renderApp();
+      }),
     );
   }
 };

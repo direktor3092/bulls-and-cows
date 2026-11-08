@@ -268,3 +268,92 @@ h1 {
   animation: shake 0.3s ease-in-out;
   border-color: #f44336 !important;
 }
+
+/* LEADERBOARD */
+.leaderboard-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.leaderboard-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.lb-stats {
+  color: var(--text);
+}
+
+.lb-badge {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  background: var(--accent);
+  color: var(--bg);
+  border-radius: 0.75rem;
+  font-weight: bold;
+}
+
+/* WIN SCREEN */
+.win-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem;
+  background: var(--panel);
+  border: 2px solid var(--accent);
+  border-radius: 0.5rem;
+  box-shadow: 0 0 40px rgba(201, 154, 58, 0.4);
+  text-align: center;
+}
+
+.win-title {
+  margin: 0;
+  font-size: 2.5rem;
+  color: var(--accent);
+  text-shadow: 0 0 20px var(--accent);
+}
+
+.win-subtitle {
+  margin: 0;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.win-stats-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  width: 100%;
+  max-width: 24rem;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+}
+
+.stat-label {
+  color: var(--text-dim);
+}
+
+.stat-value {
+  color: var(--accent);
+  font-weight: bold;
+  letter-spacing: 0.1em;
+}
