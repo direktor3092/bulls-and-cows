@@ -1,10 +1,16 @@
 import './style.css';
 import { createInitialState, startGame, resetToSettings } from './state/state';
+import { renderIntro } from './ui/intro';
 import { renderSettings } from './ui/settings';
 import { renderGame } from './ui/game';
 import { renderWinScreen } from './ui/win';
 import { generateSecret } from './core/generateSecret';
 import { saveRecord } from './services/leaderboard';
+import {
+  playBackgroundMusic,
+  pauseBackgroundMusic,
+  playSFX,
+} from './services/sound';
 import { initFireEffect } from './ui/fire-effect';
 
 const root = document.createElement('div');
@@ -14,11 +20,22 @@ document.body.append(root);
 let state = createInitialState();
 
 const renderApp = (): void => {
-  if (state.status === 'settings') {
+  if (state.status === 'intro') {
+    root.replaceChildren(
+      renderIntro(() => {
+        playSFX('start');
+        playBackgroundMusic('tristram');
+        state = { ...state, status: 'settings' };
+        renderApp();
+      }),
+    );
+  } else if (state.status === 'settings') {
     root.replaceChildren(
       renderSettings(state.settings, (settings) => {
         const secret = generateSecret(settings.length, settings.base);
         state = startGame(state, settings, secret);
+        playSFX('start');
+        playBackgroundMusic('game-music');
         renderApp();
       }),
     );
@@ -29,6 +46,8 @@ const renderApp = (): void => {
         (newState, isWin) => {
           state = newState;
           if (isWin) {
+            pauseBackgroundMusic();
+            playSFX('win');
             saveRecord({
               attempts: state.history.length,
               timeMs: (state.endTime ?? 0) - (state.startTime ?? 0),
@@ -41,6 +60,8 @@ const renderApp = (): void => {
         },
         () => {
           state = resetToSettings(state);
+          playSFX('click');
+          playBackgroundMusic('tristram');
           renderApp();
         },
       ),
@@ -49,6 +70,8 @@ const renderApp = (): void => {
     root.replaceChildren(
       renderWinScreen(state, () => {
         state = resetToSettings(state);
+        playSFX('click');
+        playBackgroundMusic('tristram');
         renderApp();
       }),
     );

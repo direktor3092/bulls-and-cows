@@ -1,4 +1,4 @@
-export type GameStatus = 'settings' | 'playing' | 'won';
+export type GameStatus = 'intro' | 'settings' | 'playing' | 'won';
 
 export interface GameSettings {
   length: number;
@@ -21,7 +21,7 @@ export interface GameState {
 }
 
 export const createInitialState = (): GameState => ({
-  status: 'settings',
+  status: 'intro',
   settings: { length: 4, base: 10 },
   secret: null,
   history: [],
@@ -71,5 +71,6 @@ export const endGame = (state: GameState): GameState => ({
 
 export const resetToSettings = (state: GameState): GameState => ({
   ...createInitialState(),
+  status: 'settings',
   settings: state.settings,
 });

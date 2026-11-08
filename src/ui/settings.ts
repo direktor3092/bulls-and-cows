@@ -2,6 +2,7 @@ import headerBanner from '../assets/header-banner.webp';
 import { loadLeaderboard } from '../services/leaderboard';
 import { countPossibleSecrets } from '../core/countPossibleSecrets';
 import { el } from './dom';
+import { playSFX } from '../services/sound';
 
 export interface GameSettings {
   length: number;
@@ -47,6 +48,7 @@ export const renderSettings = (
       text: String(len),
       onclick: () => {
         if (btn.disabled) return;
+        playSFX('click');
         selectedLength = len;
         updateUI();
       },
@@ -67,6 +69,7 @@ export const renderSettings = (
       type: 'button',
       text: base.label,
       onclick: () => {
+        playSFX('click');
         selectedBase = base.value;
         if (selectedLength > selectedBase) selectedLength = selectedBase;
         updateUI();

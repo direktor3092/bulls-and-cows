@@ -5,6 +5,7 @@ import { evaluateGuess } from '../core/evaluateGuess';
 import { isValidGuess } from '../core/isValidGuess';
 import { GameState, addGuessToHistory, endGame } from '../state/state';
 import { el } from './dom';
+import { playSFX } from '../services/sound';
 
 const formatTime = (ms: number): string => {
   const totalSeconds = Math.floor(ms / 1000);
@@ -171,8 +172,10 @@ export const renderGame = (
 
   const submitGuess = (): void => {
     const guess = input.value.toLowerCase();
+    playSFX('click');
 
     if (!isValidGuess(guess, state.settings.length, state.settings.base)) {
+      playSFX('error');
       input.classList.add('shake-error');
       window.setTimeout(() => input.classList.remove('shake-error'), 500);
       showMessage(`Enter ${state.settings.length} unique valid digits`, true);
@@ -181,6 +184,7 @@ export const renderGame = (
 
     const isDuplicate = state.history.some((e) => e.guess === guess);
     if (isDuplicate) {
+      playSFX('error');
       input.classList.add('shake-error');
       window.setTimeout(() => input.classList.remove('shake-error'), 500);
       showMessage('Already tried this guess', true);

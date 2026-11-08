@@ -10,7 +10,7 @@ import {
 describe('state', () => {
   it('should create initial state in "settings" status', () => {
     const state = createInitialState();
-    expect(state.status).toBe('settings');
+    expect(state.status).toBe('intro');
     expect(state.history).toEqual([]);
     expect(state.secret).toBeNull();
   });
@@ -28,7 +28,7 @@ describe('state', () => {
   it('should not mutate original state when starting game', () => {
     const state = createInitialState();
     startGame(state, { length: 4, base: 10 }, '1234');
-    expect(state.status).toBe('settings');
+    expect(state.status).toBe('intro');
     expect(state.secret).toBeNull();
   });
 
