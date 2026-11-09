@@ -10,6 +10,7 @@ import {
   playBackgroundMusic,
   pauseBackgroundMusic,
   playSFX,
+  preloadSounds,
 } from './services/sound';
 import { initFireEffect } from './ui/fire-effect';
 
@@ -78,5 +79,6 @@ const renderApp = (): void => {
   }
 };
 
+preloadSounds();
 renderApp();
 initFireEffect();
