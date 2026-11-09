@@ -32,7 +32,7 @@ export const renderWinScreen = (
     el('button', {
       class: 'start-btn',
       type: 'button',
-      text: 'New game',
+      text: 'Play again',
       onclick: onNewGame,
     }),
   );

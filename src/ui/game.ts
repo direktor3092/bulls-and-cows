@@ -7,6 +7,52 @@ import { GameState, addGuessToHistory, endGame } from '../state/state';
 import { el } from './dom';
 import { playSFX } from '../services/sound';
 
+const showConfirmNewGame = (onConfirm: () => void): void => {
+  const overlay = el('div', { class: 'modal-overlay' });
+  const modal = el('div', { class: 'modal-content confirm-modal' });
+
+  const closeBtn = el('button', {
+    class: 'modal-close',
+    type: 'button',
+    text: '×',
+    onclick: () => overlay.remove(),
+  });
+
+  const title = el('h2', { class: 'modal-title', text: 'Abandon game?' });
+
+  const text = el('p', {
+    class: 'rules-text',
+    text: 'Your current progress will be lost. Are you sure you want to start a new game?',
+  });
+
+  const btnRow = el('div', { class: 'confirm-btn-row' });
+  btnRow.append(
+    el('button', {
+      class: 'new-game-btn',
+      type: 'button',
+      text: 'Cancel',
+      onclick: () => overlay.remove(),
+    }),
+    el('button', {
+      class: 'start-btn',
+      type: 'button',
+      text: 'Yes, new game',
+      onclick: () => {
+        overlay.remove();
+        onConfirm();
+      },
+    }),
+  );
+
+  modal.append(closeBtn, title, text, btnRow);
+  overlay.append(modal);
+  document.body.append(overlay);
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) overlay.remove();
+  });
+};
+
 const formatTime = (ms: number): string => {
   const totalSeconds = Math.floor(ms / 1000);
   const hours = Math.floor(totalSeconds / 3600);
@@ -222,7 +268,13 @@ export const renderGame = (
     class: 'new-game-btn',
     type: 'button',
     text: 'New game',
-    onclick: onNewGame,
+    onclick: () => {
+      if (state.history.length === 0) {
+        onNewGame();
+        return;
+      }
+      showConfirmNewGame(onNewGame);
+    },
   });
   const footer = el('div', { class: 'game-footer' });
   footer.append(newGameBtn);
