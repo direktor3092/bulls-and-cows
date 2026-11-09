@@ -36,7 +36,7 @@ const showConfirmNewGame = (onConfirm: () => void): void => {
     el('button', {
       class: 'start-btn',
       type: 'button',
-      text: 'Yes, new game',
+      text: 'Yes',
       onclick: () => {
         overlay.remove();
         onConfirm();
