@@ -3,6 +3,7 @@ import { loadLeaderboard } from '../services/leaderboard';
 import { countPossibleSecrets } from '../core/countPossibleSecrets';
 import { el } from './dom';
 import { playSFX } from '../services/sound';
+import { showRulesModal } from './rules';
 
 export interface GameSettings {
   length: number;
@@ -34,7 +35,18 @@ export const renderSettings = (
     }),
   );
   container.append(bannerRow);
-  container.append(el('h1', { text: 'Bulls and Cows' }));
+  const headerRow = el('div', { class: 'header-title-row' });
+  headerRow.append(
+    el('h1', { text: 'Bulls and Cows' }),
+    el('button', {
+      class: 'rules-btn',
+      type: 'button',
+      text: '?',
+      title: 'How to play',
+      onclick: showRulesModal,
+    }),
+  );
+  container.append(headerRow);
 
   const lengthSection = el('div', { class: 'settings-section' });
   lengthSection.append(el('h3', { text: 'Secret number length' }));

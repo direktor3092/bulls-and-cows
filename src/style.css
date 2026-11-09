@@ -544,6 +544,25 @@ h1 {
     width: 2rem;
     height: 2rem;
   }
+  .header-title-row {
+    display: block;
+    position: relative;
+    text-align: center;
+  }
+
+  .header-title-row h1 {
+    padding: 0 2.5rem;
+  }
+
+  .rules-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+  }
 }
 
 @media (max-height: 800px) and (min-width: 40rem) {
@@ -790,4 +809,123 @@ body::before {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ==========================================================================
+   MODAL (RULES)
+   ========================================================================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 5, 2, 0.85);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  position: relative;
+  background: var(--panel);
+  border: 2px solid var(--accent);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  max-width: 35rem;
+  width: 100%;
+  box-shadow: 0 0 30px rgba(201, 154, 58, 0.2);
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 2rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+  color: var(--accent);
+}
+
+.modal-title {
+  color: var(--accent);
+  text-align: center;
+  margin: 0 0 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.rules-text {
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.rules-text ul {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  background: var(--bg);
+  padding: 1rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--border);
+}
+
+.rules-text li {
+  margin-bottom: 0.5rem;
+}
+
+.rules-text li:last-child {
+  margin-bottom: 0;
+}
+.header-title-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  margin-bottom: 1rem;
+}
+.header-title-row h1 {
+  margin: 0;
+}
+.rules-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: transparent;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  font-size: 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.rules-btn:hover {
+  background: var(--accent);
+  color: var(--bg);
+  box-shadow: 0 0 15px var(--accent);
 }
