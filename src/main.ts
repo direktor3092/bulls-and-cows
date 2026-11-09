@@ -1,4 +1,10 @@
 import './style.css';
+import faviconUrl from './assets/favicon.png';
+const faviconLink = document.createElement('link');
+faviconLink.rel = 'icon';
+faviconLink.type = 'image/png';
+faviconLink.href = faviconUrl;
+document.head.appendChild(faviconLink);
 import { createInitialState, startGame, resetToSettings } from './state/state';
 import { renderIntro } from './ui/intro';
 import { renderSettings } from './ui/settings';
