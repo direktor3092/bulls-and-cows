@@ -18,7 +18,7 @@ const showConfirmNewGame = (onConfirm: () => void): void => {
     onclick: () => overlay.remove(),
   });
 
-  const title = el('h2', { class: 'modal-title', text: 'Abandon game?' });
+  const title = el('h2', { class: 'modal-title', text: 'Give up?' });
 
   const text = el('p', {
     class: 'rules-text',
