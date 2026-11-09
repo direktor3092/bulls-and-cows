@@ -5,7 +5,7 @@ export const renderIntro = (onEnter: () => void): HTMLElement => {
 
   const textBlock = el('div', { class: 'intro-text-block' });
   textBlock.append(
-    el('h1', { class: 'intro-title', text: 'DIRECTOR3092' }),
+    el('h1', { class: 'intro-title', text: 'direktor3092' }),
     el('p', { class: 'intro-subtitle', text: 'presents' }),
   );
 
