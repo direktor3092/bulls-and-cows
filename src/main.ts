@@ -19,6 +19,15 @@ import {
   preloadSounds,
 } from './services/sound';
 import { initFireEffect } from './ui/fire-effect';
+import bannerImg from './assets/header-banner.webp';
+
+const preloadImages = (): void => {
+  const imagesToPreload = [bannerImg];
+  imagesToPreload.forEach((src) => {
+    const img = new Image();
+    img.src = src;
+  });
+};
 
 const root = document.createElement('div');
 root.id = 'root';
@@ -85,6 +94,7 @@ const renderApp = (): void => {
   }
 };
 
+preloadImages();
 preloadSounds();
 renderApp();
 initFireEffect();
