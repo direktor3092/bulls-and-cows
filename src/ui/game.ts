@@ -8,14 +8,20 @@ import { el } from './dom';
 import { playSFX } from '../services/sound';
 
 const showConfirmNewGame = (onConfirm: () => void): void => {
+  document.body.style.overflow = 'hidden';
   const overlay = el('div', { class: 'modal-overlay' });
   const modal = el('div', { class: 'modal-content confirm-modal' });
+
+  const closeModal = (): void => {
+    document.body.style.overflow = '';
+    overlay.remove();
+  };
 
   const closeBtn = el('button', {
     class: 'modal-close',
     type: 'button',
     text: '×',
-    onclick: () => overlay.remove(),
+    onclick: closeModal,
   });
 
   const title = el('h2', { class: 'modal-title', text: 'Give up?' });
@@ -31,13 +37,14 @@ const showConfirmNewGame = (onConfirm: () => void): void => {
       class: 'new-game-btn',
       type: 'button',
       text: 'Cancel',
-      onclick: () => overlay.remove(),
+      onclick: closeModal,
     }),
     el('button', {
       class: 'start-btn',
       type: 'button',
       text: 'Yes',
       onclick: () => {
+        document.body.style.overflow = '';
         overlay.remove();
         onConfirm();
       },
@@ -49,7 +56,7 @@ const showConfirmNewGame = (onConfirm: () => void): void => {
   document.body.append(overlay);
 
   overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) overlay.remove();
+    if (e.target === overlay) closeModal();
   });
 };
 
